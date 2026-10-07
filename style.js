@@ -550,17 +550,27 @@ function updateActiveHeader(){
         這樣滑到底後只稍微往上一點，
         指針不會突然跳回 Collection。
     */
-    if(distanceFromBottom <= 150){
+    const activeLink =
+        document.querySelector(".MainNav a.is-active");
+
+    const wasContact =
+        activeLink &&
+        activeLink.dataset.section === "ContactMe";
+
+
+    if(
+        distanceFromBottom <= 30 ||
+        (
+            wasContact &&
+            distanceFromBottom <= 180
+        )
+    ){
 
         currentSection =
             document.getElementById("ContactMe");
 
     }else{
 
-        /*
-            用畫面上方約 35% 的位置，
-            判斷目前在哪一區。
-        */
         const checkPoint =
             scrollTop + windowHeight * 0.35;
 
@@ -568,8 +578,20 @@ function updateActiveHeader(){
         pageSections.forEach(function(section){
 
             if(
-                section &&
-                section.offsetTop <= checkPoint
+                !section ||
+                section.id === "ContactMe"
+            ){
+                return;
+            }
+
+
+            const sectionTop =
+                section.getBoundingClientRect().top
+                + window.scrollY;
+
+
+            if(
+                sectionTop <= checkPoint
             ){
 
                 currentSection =

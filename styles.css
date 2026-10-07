@@ -117,16 +117,74 @@ html, body{
 
 /* 下面內容區 -- 各要一同設定時 */
 .AllContentArea{
-background: linear-gradient(
-    to bottom,
-    #000000d8 0%,
-    #100b1ae1 38%,
-    #1a1028d1 50%,
-    #2b183d 80%,
-    #442354 100%
-);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+        to bottom,
+        #000000d8 0%,
+        #100b1ae1 38%,
+        #1a1028d1 50%,
+        #2b183d 80%,
+        #442354 100%
+    );
     padding-top: 5%;
 }
+/* =========================
+   背景移動星星
+========================= */
+.StarEffect{
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 10.35;
+    background:
+        repeating-linear-gradient(
+            35deg,
+            transparent 1px,
+            transparent 2px,
+            #000 2px,
+            #000 51px,
+            #000 51px,
+            #000 52px,
+            #000 52px,
+            #000 80px
+        ),
+        repeating-linear-gradient(
+            -35deg,
+            rgba(255,255,255,0.7) 1px,
+            rgba(255,255,255,0.7) 2px,
+            #000 2px,
+            #000 51px,
+            rgba(255,255,255,0.35) 51px,
+            rgba(255,255,255,0.35) 52px,
+            #000 52px,
+            #000 80px
+        );
+    mix-blend-mode: screen;
+    background-size: 200% 200%;
+    animation:
+        StarBackgroundMove 100s linear infinite;
+}
+
+@keyframes StarBackgroundMove{
+    0%{
+        background-position:
+            135% 60%;
+    }
+    100%{
+        background-position:
+            350% -50%;
+    }
+}
+/* 讓文字與作品都在星星上面 */
+.ContentSection{
+    position: relative;
+    z-index: 1;
+}
+
+
+
 /* 下面內容區 -- 每區單獨設定 */
 .ContentSection{
     /*background-color: black;*/
