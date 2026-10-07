@@ -123,19 +123,106 @@
             
             <section id="Collection" class="ContentSection">
                 <div class="ContentSectionInner">
-                    <center>
-                        <h1>Collection</h1>
-                        <p>。這裡放作品集。</p>
-                        <!--  小遊戲連結1 -->
-                        <p><a href="tetris.html" class="MiniGameLink">(・ω・)っ 小遊戲點我 ٩(｡・ω・｡)و</a></p>
-                        <p><a href="TalkTesting.html" class="MiniGameLink">DEMO:STT語音測試</a></p>
-                        <p><a href="https://bbxr.org/~std50/" class="MiniGameLink">~各位鳥友大大 (◉Θ◉)鳥鳴學習系統(◉Θ◉) 來試試吧~</p>
-                    </center>                    
+                    <h1 class="CollectionTitle">Collection</h1>
+                    <div class="CollectionCards">
+
+                        <!-- 數位遊戲 -->
+                        <div class="CollectionCard" data-category="digital">
+                            <iframe
+                                class="CollectionCardVideo"
+                                src="https://www.youtube.com/embed/nrSEujO8eMo?autoplay=1&mute=1&loop=1&playlist=nrSEujO8eMo&controls=0&playsinline=1"
+                                title="數位遊戲"
+                                allow="autoplay; encrypted-media">
+                            </iframe>
+
+                            <span>數位遊戲</span>
+                        </div>
+
+
+                        <!-- 實體遊戲 -->
+                        <div class="CollectionCard" data-category="boardgame">
+                            <iframe
+                                class="CollectionCardVideo"
+                                src="https://www.youtube.com/embed/Iu0oEmscBi4?autoplay=1&mute=1&loop=1&playlist=Iu0oEmscBi4&controls=0&playsinline=1"
+                                title="實體遊戲"
+                                allow="autoplay; encrypted-media">
+                            </iframe>
+
+                            <span>實體遊戲</span>
+                        </div>
+
+                        <!-- 互動系統 -->
+                        <div class="CollectionCard" data-category="interactive">
+
+                            <iframe
+                                class="CollectionCardVideo"
+                                src="https://www.youtube.com/embed/yjhtHv-y3pU?autoplay=1&mute=1&loop=1&playlist=yjhtHv-y3pU&controls=0&playsinline=1"
+                                title="互動系統"
+                                allow="autoplay; encrypted-media">
+                            </iframe>
+
+                            <span>互動系統</span>
+                        </div>
+
+                        <!-- 影音剪輯 -->
+                        <div class="CollectionCard" data-category="video">
+                            <iframe
+                                class="CollectionCardVideo"
+                                src="https://www.youtube.com/embed/-NbW2Zpxgjo?autoplay=1&mute=1&loop=1&playlist=-NbW2Zpxgjo&controls=0&playsinline=1"
+                                title="影音剪輯"
+                                allow="autoplay; encrypted-media">
+                            </iframe>
+
+                            <span>影音剪輯</span>
+                        </div>
+
+
+                        <!-- 虛擬展間 -->
+                        <div class="CollectionCard" data-category="exhibition">
+
+                            <iframe
+                                class="CollectionCardVideo"
+                                src="https://www.youtube.com/embed/jSLseRZ7X58?autoplay=1&mute=1&loop=1&playlist=jSLseRZ7X58&controls=0&playsinline=1"
+                                title="虛擬展間"
+                                allow="autoplay; encrypted-media">
+                            </iframe>
+
+                            <span>虛擬展間</span>
+                        </div>
+
+
+                        <!-- 平面設計 -->
+                        <div class="CollectionCard" data-category="graphic">
+
+                            <img
+                                class="CollectionCardImage"
+                                src="./assets/work/平面設計/photo_樂齡大學.png"
+                                alt="平面設計">
+
+                            <span>平面設計</span>
+                        </div>
+
+                    </div>
                 </div>
-                <center><a href="#HeroPage" class="BackToHeroPageBotton">Back</a></center>
+                <center>
+                    <a href="#HeroPage" class="BackToHeroPageBotton">Back</a>
+                </center>
             </section>
+
+
+<!-- 作品放大展示區 -->
+<div id="CollectionModal" class="CollectionModal">
+    <div class="CollectionModalBox">
+        <button id="CollectionClose" class="CollectionClose">×</button>
+
+        <h2 id="CollectionModalTitle"></h2>
+
+        <div id="CollectionGallery" class="CollectionGallery">
+        </div>
+    </div>
+</div>
             
-                <section id="Observation" class="ContentSection">
+            <section id="Observation" class="ContentSection">
                     <div class="ContentSectionInner">
                         <center>
                             <h1>Observation</h1>
@@ -157,7 +244,7 @@
         </div>
 
     </main>
-
+    <script src="Style.js"></script>
 </body>
 
 </html>
