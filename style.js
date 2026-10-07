@@ -508,3 +508,111 @@ collectionModal.addEventListener(
 
     }
 );
+
+/* =========================
+   Header 目前區塊判定
+========================= */
+
+const mainNavLinks =
+    document.querySelectorAll(".MainNav a");
+
+const pageSections = [
+    document.getElementById("HeroPage"),
+    document.getElementById("AboutMe"),
+    document.getElementById("Collection"),
+    document.getElementById("ContactMe")
+];
+
+
+function updateActiveHeader(){
+
+    const scrollTop =
+        window.scrollY;
+
+    const windowHeight =
+        window.innerHeight;
+
+    const documentHeight =
+        document.documentElement.scrollHeight;
+
+    const distanceFromBottom =
+        documentHeight - (scrollTop + windowHeight);
+
+
+    let currentSection =
+        pageSections[0];
+
+
+    /*
+        接近最下面時，
+        固定判定成 Contact Me。
+
+        這樣滑到底後只稍微往上一點，
+        指針不會突然跳回 Collection。
+    */
+    if(distanceFromBottom <= 150){
+
+        currentSection =
+            document.getElementById("ContactMe");
+
+    }else{
+
+        /*
+            用畫面上方約 35% 的位置，
+            判斷目前在哪一區。
+        */
+        const checkPoint =
+            scrollTop + windowHeight * 0.35;
+
+
+        pageSections.forEach(function(section){
+
+            if(
+                section &&
+                section.offsetTop <= checkPoint
+            ){
+
+                currentSection =
+                    section;
+            }
+
+        });
+
+    }
+
+
+    mainNavLinks.forEach(function(link){
+
+        link.classList.remove(
+            "is-active"
+        );
+
+        if(
+            link.dataset.section ===
+            currentSection.id
+        ){
+
+            link.classList.add(
+                "is-active"
+            );
+
+        }
+
+    });
+
+}
+
+
+/* 一進網站先判斷一次 */
+updateActiveHeader();
+/* 滑動時更新 */
+window.addEventListener(
+    "scroll",
+    updateActiveHeader,
+    { passive: true }
+);
+/* 視窗尺寸改變時重新判斷 */
+window.addEventListener(
+    "resize",
+    updateActiveHeader
+);

@@ -11,6 +11,55 @@ html, body{
     cursor: url("assets/BEF_Cursor_64x64_Min.png") 2 2, auto;  /*設定滑鼠游標樣式 -- x=0 y=0 是用圖片的左上角當成點擊點*/
 }
 
+
+/* =========================
+   固定 Header
+========================= */
+.MainHeader{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.42);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.MainNav{
+    display: flex;
+    align-items: center;
+
+    gap: 45px;
+}
+.MainNav a{
+    color: rgba(255,255,255,0.82);
+
+    font-size: 15px;
+
+    text-decoration: none;
+
+    letter-spacing: 0.12em;
+
+    transition: 0.2s ease;
+}
+.MainNav a:hover{
+    color: white;
+
+    transform: translateY(-2px);
+}
+#HeroPage,
+#AboutMe,
+#Collection,
+#ContactMe{
+    scroll-margin-top: 60px;
+}
+
+
 /* 整個首頁主視覺區，當作定位基準 */
 .HeroPage{
     position: relative;
@@ -405,6 +454,95 @@ background: linear-gradient(
         max-height: 88vh;
         padding: 45px 20px 25px 20px;
     }
+    /* 手機版 Header */
+    .MainHeader{
+        height: 58px;
+        padding: 0 6px;
+    }
+    .MainNav{
+        width: 100%;
+        gap: 0;
+        justify-content: space-evenly;
+    }
+    .MainNav a{
+        font-size: 12px;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+    }
+    #HeroPage,
+    #AboutMe,
+    #Collection,
+    #ContactMe{
+        scroll-margin-top: 54px;
+    }
+}
+
+.MainNav a{
+    position: relative;
+}
+/* 菱形指針 */
+.MainNav a::before{
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: -15px;
+
+    width: 7px;
+    height: 7px;
+
+    background: white;
+
+    transform:
+        translateX(-50%)
+        rotate(45deg);
+
+    opacity: 0;
+
+    transition:
+        opacity 0.2s ease,
+        top 0.2s ease;
+}
+/* 下方菱形指針 */
+.MainNav a::after{
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: -15px;
+
+    width: 7px;
+    height: 7px;
+
+    background: white;
+
+    transform:
+        translateX(-50%)
+        rotate(45deg);
+
+    opacity: 0;
+
+    transition:
+        opacity 0.2s ease,
+        bottom 0.2s ease;
+}
+
+
+/* 現在所在區塊時，下方菱形出現 */
+.MainNav a.is-active::after{
+    opacity: 1;
+    bottom: -11px;
+}
+/* 現在所在區塊 */
+.MainNav a.is-active::before{
+    opacity: 1;
+    top: -11px;
+}
+/* 現在所在區塊的文字也亮一點 */
+.MainNav a.is-active{
+    color: white;
 }
 
 .CollectionCard{
