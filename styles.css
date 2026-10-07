@@ -101,21 +101,7 @@ background: linear-gradient(
     box-sizing: border-box;
 }
 
-.BackToHeroPageBotton{
-    position: absolute; /* Back 可以直接貼在這個區塊底部 */
-    left: 50%; /* 先移到中間 */
-    bottom: 30px; /* 離底部 30px */
-    transform: translateX(-50%); /* 再往左拉自己一半，變成真正置中 */
-    display: inline-block;
-    margin-top: 20px;
-    padding: 0px 20px;
-    font-size: 22px;
-    color: white;
-    text-decoration: none;
-    background-color: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    border-radius: 999px;
-}
+
 
 .EngilshStyleSetting_1{ /* 英文字風格_1 */
     font-family: "Comic Sans MS", sans-serif;
