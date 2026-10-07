@@ -505,6 +505,12 @@ html, body{
 
 /* 手機 */
 @media (max-width: 800px){
+    /* 手機版首頁稍微拉寬，右側超出的部分裁掉 */
+    .MainBackground,
+    .ButtonLayer{
+        width: 114%;
+        left: -5.4%;
+    }
     .CollectionCards{
         width: 90%;
         max-width: 560px;
@@ -542,6 +548,9 @@ html, body{
         font-size: 12px;
         letter-spacing: 0.03em;
         white-space: nowrap;
+    }
+    #AboutMe{
+    min-height: 91vh;
     }
     #HeroPage,
     #AboutMe,
