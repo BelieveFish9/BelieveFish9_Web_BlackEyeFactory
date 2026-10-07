@@ -149,6 +149,11 @@ background: linear-gradient(
     padding: 5px 30px 10px 30px;
     box-sizing: border-box;
 }
+#ContactMe{
+    min-height: 28vh;
+    padding-top: 50px;
+    padding-bottom: 60px;
+}
 
 
 
@@ -249,13 +254,13 @@ background: linear-gradient(
     z-index: 5000;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
     padding: 4vh 4vw;
 
-    /* 背景不要壓這麼黑 */
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.916);
 
     opacity: 0;
     visibility: hidden;
@@ -265,14 +270,11 @@ background: linear-gradient(
         opacity 0.2s ease,
         visibility 0.2s ease;
 }
-
 .CollectionModal.is-open{
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
 }
-
-
 .CollectionModalBox{
     position: relative;
 
@@ -301,7 +303,6 @@ background: linear-gradient(
         rotateY(-90deg)
         scale(0.68);
 }
-
 
 /* 打開時：翻面 + 放大 */
 .CollectionModal.is-open .CollectionModalBox{
@@ -342,6 +343,21 @@ background: linear-gradient(
     text-align: center;
     /* 標題下面的線 */
     border-bottom: 1px solid rgba(255,255,255,0.22);
+}
+
+.CollectionCloseHint{
+    position: static;
+
+    margin-top: 10px;
+
+    transform: none;
+
+    color: rgba(255,255,255,0.75);
+
+    font-size: 14px;
+    letter-spacing: 0.08em;
+
+    pointer-events: none;
 }
 
 /* 叉叉 */
@@ -569,6 +585,12 @@ background: linear-gradient(
         opacity: 1;
     }
 }
+
+.AboutKeyword{
+    color: #d590eceb;
+    font-weight: bold;
+}
+
 
 /* 色卡測試 */
 /* 
