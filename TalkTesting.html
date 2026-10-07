@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>中文語音轉文字（Web Speech API）</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; line-height: 1.6; }
+    button { padding: 10px 14px; margin-right: 8px; cursor: pointer; }
+    #out { width: 100%; min-height: 180px; padding: 12px; }
+    .hint { color: #666; font-size: 14px; margin-top: 8px; }
+    .row { margin: 12px 0; }
+  </style>
+</head>
+<body>
+  <h2>中文語音 → 中文文字</h2>
+
+  <div class="row">
+    <label>語言：</label>
+    <select id="lang">
+      <option value="zh-TW" selected>繁體中文（zh-TW）</option>
+      <option value="zh-CN">簡體中文（zh-CN）</option>
+      <option value="en-US">English（en-US）</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <button id="btnStart">開始錄音</button>
+    <button id="btnStop" disabled>停止</button>
+    <button id="btnClear">清空</button>
+  </div>
+
+  <textarea id="out" placeholder="辨識結果會出現在這裡…"></textarea>
+  <div class="hint" id="status">狀態：待機</div>
+
+  <script>
+    // 1) 相容性：Chrome/Edge 多半可用；Safari/Firefox 支援狀況不一
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const statusEl = document.getElementById('status');
+    const outEl = document.getElementById('out');
+    const langEl = document.getElementById('lang');
+    const btnStart = document.getElementById('btnStart');
+    const btnStop = document.getElementById('btnStop');
+    const btnClear = document.getElementById('btnClear');
+
+    if (!SpeechRecognition) {
+      statusEl.textContent = '狀態：此瀏覽器不支援 Web Speech API（建議用 Chrome/Edge）。';
+      btnStart.disabled = true;
+      btnStop.disabled = true;
+    } else {
+      const recognition = new SpeechRecognition();
+
+      // 2) 常用設定
+      recognition.continuous = true;       // 持續聽（可一直講）
+      recognition.interimResults = true;   // 顯示即時草稿（邊講邊出字）
+      recognition.maxAlternatives = 1;
+
+      let finalText = '';
+
+      function setStatus(t) { statusEl.textContent = '狀態：' + t; }
+
+      btnStart.addEventListener('click', async () => {
+        // 3) 建議：先“主動”觸發麥克風權限（不是必須，但可提早報錯）
+        try {
+          await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (e) {
+          setStatus('麥克風權限被拒絕或不可用');
+          return;
+        }
+
+        recognition.lang = langEl.value;  // zh-TW / zh-CN
+        finalText = outEl.value || '';
+        try {
+          recognition.start();
+          setStatus('錄音中…請開始說話');
+          btnStart.disabled = true;
+          btnStop.disabled = false;
+        } catch (e) {
+          // start 可能在重複呼叫時丟錯
+          setStatus('啟動失敗：' + e.message);
+        }
+      });
+
+      btnStop.addEventListener('click', () => {
+        recognition.stop();
+      });
+
+      btnClear.addEventListener('click', () => {
+        finalText = '';
+        outEl.value = '';
+        setStatus('已清空');
+      });
+
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += transcript;
+          else interim += transcript;
+        }
+        outEl.value = finalText + (interim ? ('\n' + interim) : '');
+      };
+
+      recognition.onerror = (event) => {
+        setStatus('錯誤：' + event.error);
+        btnStart.disabled = false;
+        btnStop.disabled = true;
+      };
+
+      recognition.onend = () => {
+        setStatus('已停止');
+        btnStart.disabled = false;
+        btnStop.disabled = true;
+      };
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black; /* 整個頁面背景改黑色 */
+}
+/* 避免尺寸計算亂掉 */
+*{                           /*萬用選擇器--整個頁面所有元素都套用*/
+    box-sizing: border-box;
+    cursor: url("assets/BEF_Cursor_64x64_Min.png") 2 2, auto;  /*設定滑鼠游標樣式 -- x=0 y=0 是用圖片的左上角當成點擊點*/
+}
+
+/* 整個首頁主視覺區，當作定位基準 */
+.HeroPage{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: black;
+}
+/* 背景圖：拉伸 */
+.MainBackground{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;      /* 保持比例，完整顯示 */
+    object-position: center;  /* 置中 */
+}
+
+/*動圖*/
+.FloatingDecoration{
+    transform-box: fill-box;
+    transform-origin: center center;
+    animation: MoonSwing 5.5s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes MoonSwing{
+    0%{
+        transform: rotate(-0.5deg);
+    }
+    50%{
+        transform: rotate(0.8deg);
+    }
+    100%{
+        transform: rotate(-0.5deg);
+    }
+}
+
+/* SVG 按鈕層，整層蓋在背景圖上 */
+.ButtonLayer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+/* 先保留你測試按鈕熱區的樣式 */
+.ButtonShape{
+    fill: rgba(255, 255, 255, 0);/* 底色色彩透明 */
+    stroke: rgba(255, 255, 255, 0);/* 外框色彩透明 */
+    stroke-width: 2;
+}
+
+/* 下面內容區 -- 各要一同設定時 */
+.AllContentArea{
+background: linear-gradient(
+    to bottom,
+    #000000d8 0%,
+    #100b1ae1 38%,
+    #1a1028d1 50%,
+    #2b183d 80%,
+    #442354 100%
+);
+    padding-top: 5%;
+}
+/* 下面內容區 -- 每區單獨設定 */
+.ContentSection{
+    /*background-color: black;*/
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    color: white;
+    padding: 20px 20px 40px 20px;
+    box-sizing: border-box;
+    h1{
+        margin-top: -5px;
+        font-size: 50px;
+    }
+    p{
+        font-size: 16px;
+    }
+}
+.ContentSectionInner{
+    width: 100%;
+    padding: 5px 30px 10px 30px;
+    box-sizing: border-box;
+}
+
+.BackToHeroPageBotton{
+    position: absolute; /* Back 可以直接貼在這個區塊底部 */
+    left: 50%; /* 先移到中間 */
+    bottom: 30px; /* 離底部 30px */
+    transform: translateX(-50%); /* 再往左拉自己一半，變成真正置中 */
+    display: inline-block;
+    margin-top: 20px;
+    padding: 0px 20px;
+    font-size: 22px;
+    color: white;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+}
+
+.EngilshStyleSetting_1{ /* 英文字風格_1 */
+    font-family: "Comic Sans MS", sans-serif;
+    size: 20px;
+}
+.ForImportantColor_1{/* 重要文字的顏色_1 */
+    color: #f2ff00;
+    size: 20px;
+}
+
+/* 小遊戲點我的樣式 */
+.MiniGameLink{
+    color: rgb(72, 255, 0);
+    font-size: 22px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.45);
+    padding-bottom: 2px;
+    transition: 0.2s ease;
+}
+.MiniGameLink:hover{
+    color: #f2ff00;
+    border-bottom: 1px solid rgba(251, 255, 0, 0.9);
+}
+
+
+/* 色卡測試 */
+/* 
+background: linear-gradient(
+    to bottom,
+    #3b2354 0%,
+    #2a183d 28%,
+    #1a1028 55%,
+    #0b0812 82%,
+    #000000 100%
+);
+background: linear-gradient(
+    to bottom,
+    #4a243f 0%,
+    #32182d 30%,
+    #1d101c 58%,
+    #0b070c 84%,
+    #000000 100%
+);
+background: linear-gradient(
+    to bottom,
+    #2d2a5a 0%,
+    #201d42 30%,
+    #15122b 58%,
+    #090814 84%,
+    #000000 100%
+);
+background: linear-gradient(
+    to bottom,
+    #5a2f5c 0%,
+    #3f2143 30%,
+    #241428 58%,
+    #0d090f 84%,
+    #000000 100%
+);
+background: linear-gradient(
+    to bottom,
+    #312046 0%,
+    #221731 30%,
+    #16101f 58%,
+    #09070d 84%,
+    #000000 100%
+);
+background: linear-gradient(
+    to bottom,
+    #4b2d46 0%,
+    #342033 28%,
+    #21141d 55%,
+    #0d090c 82%,
+    #000000 100%
+);
+*/

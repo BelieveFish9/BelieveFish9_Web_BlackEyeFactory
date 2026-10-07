@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>語音轉文字 Demo</title>
+  <style>
+    body {
+      font-family: Arial, "Microsoft JhengHei", sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.8;
+      background: #f7f7f7;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    #startBtn {
+      background: #2d8cff;
+      color: white;
+    }
+
+    #stopBtn {
+      background: #ff5c5c;
+      color: white;
+    }
+
+    #status {
+      margin: 16px 0;
+      font-weight: bold;
+    }
+
+    #result {
+      min-height: 120px;
+      border: 2px dashed #ccc;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fafafa;
+      white-space: pre-wrap;
+    }
+
+    .note {
+      color: #666;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>語音轉文字 Demo</h1>
+
+    <button id="startBtn">開始講話</button>
+    <button id="stopBtn">停止</button>
+
+    <div id="status">狀態：尚未開始</div>
+    <div id="result">辨識結果會顯示在這裡…</div>
+
+    <div class="note">
+      請使用 Chrome 測試，並允許麥克風權限。
+    </div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const statusText = document.getElementById("status");
+    const resultBox = document.getElementById("result");
+
+    // 兼容 Chrome
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      statusText.textContent = "狀態：目前瀏覽器不支援語音辨識";
+      startBtn.disabled = true;
+      stopBtn.disabled = true;
+    } else {
+      const recognition = new SpeechRecognition();
+
+      // 設定語系：繁體中文
+      recognition.lang = "zh-TW";
+
+      // 是否持續聆聽
+      recognition.continuous = true;
+
+      // 是否即時回傳中間結果
+      recognition.interimResults = true;
+
+      let finalTranscript = "";
+
+      startBtn.addEventListener("click", () => {
+        finalTranscript = "";
+        resultBox.textContent = "";
+        statusText.textContent = "狀態：正在聆聽中...";
+        recognition.start();
+      });
+
+      stopBtn.addEventListener("click", () => {
+        recognition.stop();
+        statusText.textContent = "狀態：已停止";
+      });
+
+      recognition.onresult = (event) => {
+        let interimTranscript = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + "\n";
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        resultBox.textContent = finalTranscript + interimTranscript;
+      };
+
+      recognition.onstart = () => {
+        statusText.textContent = "狀態：麥克風已啟動，請開始說話";
+      };
+
+      recognition.onend = () => {
+        statusText.textContent = "狀態：語音辨識已結束";
+      };
+
+      recognition.onerror = (event) => {
+        statusText.textContent = "錯誤：" + event.error;
+      };
+    }
+  </script>
+</body>
+</html>

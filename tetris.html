@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <!-- 網頁編碼 -->
+    <meta charset="UTF-8" />
+
+    <!-- 響應式縮放設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- 分頁標題 -->
+    <title>BelieveF 的黑眼圈製造所｜Tetris</title>
+
+    <style>
+        /* =========================
+            全域基礎設定
+        ========================= */
+
+        /* 所有元素統一盒模型，避免尺寸不好算 */
+        *{
+            box-sizing: border-box;
+        }
+
+        /* html 與 body 撐滿整個視窗 */
+        html, body{
+            margin: 0; /* 清除預設外距 */
+            padding: 0; /* 清除預設內距 */
+            width: 100%; /* 寬度滿版 */
+            height: 100%; /* 高度滿版 */
+            overflow: hidden; /* 不要出現卷軸 */
+            background-color: black; /* 底色黑色 */
+            font-family: "Microsoft JhengHei", sans-serif; /* 字型 */
+            color: white; /* 文字顏色 */
+        }
+
+        /* body 做成整頁主背景 */
+        body{
+            background: linear-gradient(
+                to bottom,
+                #000000 0%,
+                #100b1ae1 38%,
+                #1a1028d1 50%,
+                #2b183d 80%,
+                #442354 100%
+            );
+        }
+
+        /* =========================
+            最外層頁面
+        ========================= */
+
+        .TetrisStage{
+            position: relative; /* 給內部定位基準 */
+            width: 100vw; /* 滿整個視窗寬 */
+            height: 100vh; /* 滿整個視窗高 */
+            overflow: hidden; /* 不要捲動 */
+            display: flex; /* 方便置中 */
+            justify-content: center; /* 水平置中 */
+            align-items: center; /* 垂直置中 */
+        }
+
+        /* 
+            這個是整個遊戲內容的固定比例舞台
+            用 transform 縮放，達到像你主視覺那種「整塊完整顯示」的效果
+        */
+        .ScaleWrap{
+            width: 1100px; /* 設計稿基準寬度 */
+            height: 760px; /* 設計稿基準高度 */
+            transform-origin: center center; /* 從中心縮放 */
+        }
+
+        /* 遊戲內容區 */
+        .TetrisPage{
+            width: 1100px;
+            height: 760px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 28px 34px;
+        }
+
+        /* =========================
+            頁面標題
+        ========================= */
+
+        .PageTitleArea{
+            text-align: center;
+            margin-bottom: 22px;
+            flex-shrink: 0;
+        }
+
+        .PageTitleArea h1{
+            margin: 0 0 10px 0;
+            font-size: 42px;
+            color: white;
+        }
+
+        .PageTitleArea p{
+            margin: 0;
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* =========================
+            主遊戲區排版
+        ========================= */
+
+        .GameLayout{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 28px;
+            flex: 1;
+        }
+
+        /* 左側遊戲框 */
+        .GameArea{
+            padding: 18px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.16);
+            box-shadow: 0 0 30px rgba(0,0,0,0.28);
+            backdrop-filter: blur(3px);
+        }
+
+        /* 遊戲畫布 */
+        #gameCanvas{
+            display: block;
+            background: rgba(0,0,0,0.30);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+        }
+
+        /* 右側資訊面板 */
+        .SidePanel{
+            width: 300px;
+            padding: 24px 20px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.16);
+            box-shadow: 0 0 30px rgba(0,0,0,0.28);
+            backdrop-filter: blur(3px);
+        }
+
+        .SidePanel h2{
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 28px;
+            color: white;
+        }
+
+        /* 資訊列 */
+        .InfoRow{
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            font-size: 17px;
+            color: white;
+        }
+
+        .InfoLabel{
+            opacity: 0.8;
+            margin-right: 8px;
+        }
+
+        .InfoValue{
+            font-weight: bold;
+        }
+
+        /* =========================
+            按鈕
+        ========================= */
+
+        .ButtonGroup{
+            margin-top: 20px;
+        }
+
+        .GameButton{
+            display: block;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.45);
+            background-color: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .GameButton:hover{
+            background-color: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+
+        /* 操作說明區 */
+        .TipsBox{
+            margin-top: 10px;
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            line-height: 1.8;
+            font-size: 14px;
+            color: rgba(255,255,255,0.82);
+        }
+
+        /* 遊戲狀態文字 */
+        .GameStatus{
+            margin-top: 16px;
+            min-height: 28px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffd6ea;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 整個畫面舞台 -->
+    <div class="TetrisStage">
+        <!-- 固定比例縮放容器 -->
+        <div class="ScaleWrap" id="scaleWrap">
+
+            <!-- 整個遊戲頁 -->
+            <main class="TetrisPage">
+
+                <!-- 標題 -->
+                <section class="PageTitleArea">
+                    <h1>Tetris</h1>
+                    <p>黑眼圈製造所的小遊戲角落。</p>
+                </section>
+
+                <!-- 主內容 -->
+                <section class="GameLayout">
+
+                    <!-- 左側遊戲畫面 -->
+                    <div class="GameArea">
+                        <!--
+                            10 格寬 × 20 格高
+                            每格 30px
+                            畫布大小 300 x 600
+                        -->
+                        <canvas id="gameCanvas" width="300" height="600"></canvas>
+                    </div>
+
+                    <!-- 右側資訊 -->
+                    <aside class="SidePanel">
+                        <h2>小遊戲</h2>
+
+                        <div class="InfoRow">
+                            <span class="InfoLabel">分數：</span>
+                            <span class="InfoValue" id="score">0</span>
+                        </div>
+
+                        <div class="InfoRow">
+                            <span class="InfoLabel">消行：</span>
+                            <span class="InfoValue" id="lines">0</span>
+                        </div>
+
+                        <div class="InfoRow">
+                            <span class="InfoLabel">等級：</span>
+                            <span class="InfoValue" id="level">1</span>
+                        </div>
+
+                        <div class="ButtonGroup">
+                            <!-- 開始遊戲 -->
+                            <button class="GameButton" id="startButton">開始遊戲</button>
+
+                            <!-- 重新開始 -->
+                            <button class="GameButton" id="restartButton">重新開始</button>
+
+                            <!-- 回首頁 -->
+                            <a href="index.html#Collection" class="GameButton">回到 作品集/遊戲區</a>
+                        </div>
+
+                        <div class="TipsBox">
+                            A / ← ：往左移動<br>
+                            D / → ：往右移動<br>
+                            W / ↑ ：旋轉方塊<br>
+                            S / ↓ ：加速下落<br>
+                            Space：直接掉到底部
+                        </div>
+
+                        <div class="GameStatus" id="gameStatus"></div>
+                    </aside>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        /* =========================
+            讓整個遊戲舞台自動縮放
+            目標：像你主視覺那樣完整顯示，不要有卷軸
+        ========================= */
+
+        const scaleWrap = document.getElementById("scaleWrap");
+
+        function fitStage(){
+            const designWidth = 1100;  // 設計基準寬
+            const designHeight = 760;  // 設計基準高
+
+            const windowRatioX = window.innerWidth / designWidth;
+            const windowRatioY = window.innerHeight / designHeight;
+
+            // 取比較小的比例，才能保證整塊內容完整塞進畫面
+            const scale = Math.min(windowRatioX, windowRatioY);
+
+            scaleWrap.style.transform = `scale(${scale})`;
+        }
+
+        // 一進頁面先執行一次
+        fitStage();
+
+        // 視窗大小改變時重新計算
+        window.addEventListener("resize", fitStage);
+
+        /* =========================
+            抓取 DOM
+        ========================= */
+
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const scoreText = document.getElementById("score");
+        const linesText = document.getElementById("lines");
+        const levelText = document.getElementById("level");
+        const gameStatusText = document.getElementById("gameStatus");
+
+        const startButton = document.getElementById("startButton");
+        const restartButton = document.getElementById("restartButton");
+
+        /* =========================
+            遊戲基本常數
+        ========================= */
+
+        const BLOCK_SIZE = 30;
+        const COLS = 10;
+        const ROWS = 20;
+
+        let board = [];
+        let player = null;
+        let score = 0;
+        let lines = 0;
+        let level = 1;
+        let dropCounter = 0;
+        let lastTime = 0;
+        let dropInterval = 800;
+        let gameRunning = false;
+        let animationId = null;
+
+        /* =========================
+            方塊資料
+        ========================= */
+
+        const PIECES = {
+            I: [
+                [0,0,0,0],
+                [1,1,1,1],
+                [0,0,0,0],
+                [0,0,0,0]
+            ],
+            O: [
+                [2,2],
+                [2,2]
+            ],
+            T: [
+                [0,3,0],
+                [3,3,3],
+                [0,0,0]
+            ],
+            S: [
+                [0,4,4],
+                [4,4,0],
+                [0,0,0]
+            ],
+            Z: [
+                [5,5,0],
+                [0,5,5],
+                [0,0,0]
+            ],
+            J: [
+                [6,0,0],
+                [6,6,6],
+                [0,0,0]
+            ],
+            L: [
+                [0,0,7],
+                [7,7,7],
+                [0,0,0]
+            ]
+        };
+
+        const COLORS = {
+            1: "#b8b8ff",
+            2: "#ffd6a5",
+            3: "#e7c6ff",
+            4: "#caffbf",
+            5: "#ffcad4",
+            6: "#a0c4ff",
+            7: "#ffc6a5"
+        };
+
+        /* =========================
+            建立空棋盤
+        ========================= */
+
+        function createBoard(){
+            return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+        }
+
+        /* =========================
+            建立新方塊
+        ========================= */
+
+        function createPlayer(){
+            const types = "IOTSZJL";
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            const matrix = PIECES[randomType];
+
+            return {
+                matrix: matrix.map(row => [...row]),
+                pos: {
+                    x: Math.floor(COLS / 2) - Math.floor(matrix[0].length / 2),
+                    y: 0
+                }
+            };
+        }
+
+        /* =========================
+            初始化遊戲
+        ========================= */
+
+        function initGame(){
+            board = createBoard();
+            player = createPlayer();
+            score = 0;
+            lines = 0;
+            level = 1;
+            dropCounter = 0;
+            lastTime = 0;
+            dropInterval = 800;
+            gameRunning = false;
+            gameStatusText.textContent = "";
+            updateInfo();
+            draw();
+        }
+
+        /* =========================
+            更新分數資訊
+        ========================= */
+
+        function updateInfo(){
+            scoreText.textContent = score;
+            linesText.textContent = lines;
+            levelText.textContent = level;
+        }
+
+        /* =========================
+            畫背景格線
+        ========================= */
+
+        function drawGrid(){
+            ctx.strokeStyle = "rgba(255,255,255,0.07)";
+            ctx.lineWidth = 1;
+
+            for(let x = 0; x <= COLS; x++){
+                ctx.beginPath();
+                ctx.moveTo(x * BLOCK_SIZE, 0);
+                ctx.lineTo(x * BLOCK_SIZE, canvas.height);
+                ctx.stroke();
+            }
+
+            for(let y = 0; y <= ROWS; y++){
+                ctx.beginPath();
+                ctx.moveTo(0, y * BLOCK_SIZE);
+                ctx.lineTo(canvas.width, y * BLOCK_SIZE);
+                ctx.stroke();
+            }
+        }
+
+        /* =========================
+            畫單格方塊
+        ========================= */
+
+        function drawBlock(x, y, value){
+            if(value === 0) return;
+
+            ctx.fillStyle = COLORS[value];
+            ctx.fillRect(
+                x * BLOCK_SIZE,
+                y * BLOCK_SIZE,
+                BLOCK_SIZE,
+                BLOCK_SIZE
+            );
+
+            ctx.strokeStyle = "rgba(255,255,255,0.20)";
+            ctx.lineWidth = 1.2;
+            ctx.strokeRect(
+                x * BLOCK_SIZE,
+                y * BLOCK_SIZE,
+                BLOCK_SIZE,
+                BLOCK_SIZE
+            );
+
+            ctx.fillStyle = "rgba(255,255,255,0.12)";
+            ctx.fillRect(
+                x * BLOCK_SIZE + 3,
+                y * BLOCK_SIZE + 3,
+                BLOCK_SIZE - 10,
+                6
+            );
+        }
+
+        /* =========================
+            畫棋盤
+        ========================= */
+
+        function drawBoard(){
+            for(let y = 0; y < ROWS; y++){
+                for(let x = 0; x < COLS; x++){
+                    drawBlock(x, y, board[y][x]);
+                }
+            }
+        }
+
+        /* =========================
+            畫玩家方塊
+        ========================= */
+
+        function drawPlayer(){
+            player.matrix.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if(value !== 0){
+                        drawBlock(player.pos.x + x, player.pos.y + y, value);
+                    }
+                });
+            });
+        }
+
+        /* =========================
+            重畫畫面
+        ========================= */
+
+        function draw(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            drawBoard();
+            drawPlayer();
+        }
+
+        /* =========================
+            碰撞檢查
+        ========================= */
+
+        function collide(board, player){
+            const matrix = player.matrix;
+            const pos = player.pos;
+
+            for(let y = 0; y < matrix.length; y++){
+                for(let x = 0; x < matrix[y].length; x++){
+                    if(
+                        matrix[y][x] !== 0 &&
+                        (
+                            board[y + pos.y] === undefined ||
+                            board[y + pos.y][x + pos.x] === undefined ||
+                            board[y + pos.y][x + pos.x] !== 0
+                        )
+                    ){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /* =========================
+            固定方塊到棋盤
+        ========================= */
+
+        function merge(board, player){
+            player.matrix.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if(value !== 0){
+                        board[y + player.pos.y][x + player.pos.x] = value;
+                    }
+                });
+            });
+        }
+
+        /* =========================
+            消行處理
+        ========================= */
+
+        function clearLines(){
+            let clearedCount = 0;
+
+            outer:
+            for(let y = ROWS - 1; y >= 0; y--){
+                for(let x = 0; x < COLS; x++){
+                    if(board[y][x] === 0){
+                        continue outer;
+                    }
+                }
+
+                const row = board.splice(y, 1)[0].fill(0);
+                board.unshift(row);
+                clearedCount++;
+                y++;
+            }
+
+            if(clearedCount > 0){
+                lines += clearedCount;
+
+                const scoreTable = [0, 100, 300, 500, 800];
+                score += scoreTable[clearedCount] * level;
+
+                level = Math.floor(lines / 10) + 1;
+                dropInterval = Math.max(120, 800 - (level - 1) * 60);
+
+                updateInfo();
+            }
+        }
+
+        /* =========================
+            左右移動
+        ========================= */
+
+        function movePlayer(dir){
+            player.pos.x += dir;
+
+            if(collide(board, player)){
+                player.pos.x -= dir;
+            }
+        }
+
+        /* =========================
+            往下掉一格
+        ========================= */
+
+        function playerDrop(){
+            player.pos.y++;
+
+            if(collide(board, player)){
+                player.pos.y--;
+                merge(board, player);
+                clearLines();
+                player = createPlayer();
+
+                if(collide(board, player)){
+                    endGame();
+                    return;
+                }
+            }
+
+            dropCounter = 0;
+        }
+
+        /* =========================
+            空白鍵：直接掉到底
+            這裡就是你要的效果
+        ========================= */
+
+        function hardDrop(){
+            while(!collide(board, player)){
+                player.pos.y++;
+            }
+
+            // 多走一格，退回來
+            player.pos.y--;
+
+            // 直接固定到棋盤
+            merge(board, player);
+
+            // 消行
+            clearLines();
+
+            // 生成新方塊
+            player = createPlayer();
+
+            // 如果新方塊出來就撞到，遊戲結束
+            if(collide(board, player)){
+                endGame();
+                return;
+            }
+
+            // 重設下落計時
+            dropCounter = 0;
+
+            // 立刻重畫
+            draw();
+        }
+
+        /* =========================
+            矩陣旋轉
+        ========================= */
+
+        function rotate(matrix){
+            for(let y = 0; y < matrix.length; y++){
+                for(let x = 0; x < y; x++){
+                    [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+                }
+            }
+
+            matrix.forEach(row => row.reverse());
+        }
+
+        /* =========================
+            旋轉玩家方塊
+        ========================= */
+
+        function playerRotate(){
+            const oldMatrix = player.matrix.map(row => [...row]);
+            const oldX = player.pos.x;
+
+            rotate(player.matrix);
+
+            let offset = 1;
+
+            while(collide(board, player)){
+                player.pos.x += offset;
+                offset = -(offset + (offset > 0 ? 1 : -1));
+
+                if(Math.abs(offset) > player.matrix[0].length){
+                    player.matrix = oldMatrix;
+                    player.pos.x = oldX;
+                    return;
+                }
+            }
+        }
+
+        /* =========================
+            遊戲主迴圈
+        ========================= */
+
+        function update(time = 0){
+            if(!gameRunning) return;
+
+            const deltaTime = time - lastTime;
+            lastTime = time;
+            dropCounter += deltaTime;
+
+            if(dropCounter > dropInterval){
+                playerDrop();
+            }
+
+            draw();
+            animationId = requestAnimationFrame(update);
+        }
+
+        /* =========================
+            開始 / 結束 / 重開
+        ========================= */
+
+        function startGame(){
+            if(gameRunning) return;
+            gameRunning = true;
+            gameStatusText.textContent = "";
+            update();
+        }
+
+        function endGame(){
+            gameRunning = false;
+            cancelAnimationFrame(animationId);
+            gameStatusText.textContent = "Game Over";
+            draw();
+        }
+
+        function restartGame(){
+            cancelAnimationFrame(animationId);
+            initGame();
+            gameRunning = true;
+            update();
+        }
+
+        /* =========================
+            鍵盤控制
+            支援：
+            - WASD
+            - 上下左右
+            - Space 直接落底
+        ========================= */
+
+        document.addEventListener("keydown", (event) => {
+            if(!gameRunning) return;
+
+            // 防止方向鍵與空白鍵造成頁面預設行為
+            if(
+                event.key === "ArrowLeft" ||
+                event.key === "ArrowRight" ||
+                event.key === "ArrowUp" ||
+                event.key === "ArrowDown" ||
+                event.code === "Space"
+            ){
+                event.preventDefault();
+            }
+
+            // 左移：A 或 ←
+            if(event.key === "a" || event.key === "A" || event.key === "ArrowLeft"){
+                movePlayer(-1);
+            }
+            // 右移：D 或 →
+            else if(event.key === "d" || event.key === "D" || event.key === "ArrowRight"){
+                movePlayer(1);
+            }
+            // 下移：S 或 ↓
+            else if(event.key === "s" || event.key === "S" || event.key === "ArrowDown"){
+                playerDrop();
+            }
+            // 旋轉：W 或 ↑
+            else if(event.key === "w" || event.key === "W" || event.key === "ArrowUp"){
+                playerRotate();
+            }
+            // 直接落底：Space
+            else if(event.code === "Space"){
+                hardDrop();
+            }
+
+            draw();
+        });
+
+        /* =========================
+            綁定按鈕
+        ========================= */
+
+        startButton.addEventListener("click", startGame);
+        restartButton.addEventListener("click", restartGame);
+
+        /* =========================
+            頁面載入先初始化
+        ========================= */
+
+        initGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+    
+<head>
+    <!-- 設定網頁文字編碼，避免中文亂碼 -->
+    <meta charset="utf-8" />
+    <!-- 讓網頁在手機、平板、電腦上都能正常縮放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- 瀏覽器分頁左上角的小圖示 -->
+    <link rel="icon" href="./assets/BF_Avatar_Icon.png" />
+    <!-- 網頁標題 -->
+    <title>KeepBelieveF 的黑眼圈製造所</title>
+    <!-- 連接外部 CSS 樣式表 -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <!-- 整個頁面的主要內容外層 -->
+    <main class="Page">
+        <!-- 首頁主視覺區塊 -- 背景圖和 SVG 按鈕層都放在這裡 -->
+        <section id="HeroPage" class="HeroPage">
+            <!-- 主背景圖 -->
+            <img
+            class="MainBackground"
+            src="./assets/1920x1080/BEF_MainBackground_1920x1080.png"
+            alt="主背景圖" />
+            <!-- SVG 按鈕熱區圖層 -- 這層會疊在背景圖上面 -- viewBox 要跟你的背景設計座標一致，這裡用 1920 x 1080 -->
+            <svg
+            class="ButtonLayer"
+            viewBox="0 0 1920 1080"
+            preserveAspectRatio="none"
+            aria-label="按鈕或互動圖層">
+                <!-- 月亮動次動 -->
+                <image href="./assets/1920x1080/BEF_Amin_Star_1920x1080.png"
+                class="FloatingDecoration"
+                x="-130"
+                y="-470"
+                width="2100"
+                height="2100"
+                preserveAspectRatio="xMidYMid meet" 
+                alt="裝飾動圖" />
+                <!-- 按鈕熱區 -- 點擊後會跳到下面 id= 的區塊 -->
+                <a href="#AboutMe" class="AboutTheButton" aria-label="About Me">
+                    <rect
+                    class="ButtonShape"
+                    x="135"
+                    y="538"
+                    width="153"
+                    height="40"
+                    rx="10"></rect></a>
+                <a href="#ContactMe" class="AboutTheButton" aria-label="Contact Me">
+                    <rect
+                    class="ButtonShape"
+                    x="300"
+                    y="543"
+                    width="163"
+                    height="40"
+                    rx="10"></rect></a>
+                <a href="#Collection" class="AboutTheButton" aria-label="Collection">
+                    <rect
+                    class="ButtonShape"
+                    x="800"
+                    y="280"
+                    width="280"
+                    height="70"
+                    rx="10"></rect></a>
+                <a href="#Observation" class="AboutTheButton" aria-label="Observation">
+                    <rect
+                    class="ButtonShape"
+                    x="580"
+                    y="718"
+                    width="240"
+                    height="46"
+                    rx="10"></rect></a>
+                <a href="#NightlyNote" class="AboutTheButton" aria-label="NightlyNote">
+                    <rect
+                    class="ButtonShape"
+                    x="832"
+                    y="719"
+                    width="252"
+                    height="46"
+                    rx="10"></rect></a>
+            </svg>
+        </section>
+        
+        <!-- 熱區內容區 -- 上面的熱區點下去，會跳到這裡 -->
+        <div class="AllContentArea">
+            <section id="AboutMe" class="ContentSection">
+                <div class="ContentSectionInner">
+                    <center>
+                        <h1>About Me</h1>
+                        <div class="EngilshStyleSetting_1">
+                            <p>你好~ 我是 BelieveF</p>
+                            <p>你也可以叫我 BelieveF 或 BF</p>
+                            <p>歡迎來到我的製造所</p>
+                            <p>這裡會有我的</p>
+                            </p>自介 (About Me)、作品集 (Collection)、聯繫我 (Contact Me)、</p>
+                            </p>有趣的技術(Observation)跟一些較不完整的自創小東西(Nightly Notes)</p>
+                            <p>你可以通過點擊</p>
+                            <p>製造所內的相關標籤前往</p>
+                            <p>===========================</p>
+                            <div class="ForImportantColor_1">
+                            <p>目前作品集有簡易小遊戲跟碩論成品呦</p>
+                            <p>～可以點擊-製造所-Collection-前往~</p>
+                            </div>
+                        </div>
+                    </center>
+                </div>
+                <center><a href="#HeroPage" class="BackToHeroPageBotton">Back</a></center>
+            </section>
+
+            <section id="ContactMe" class="ContentSection">
+                <div class="ContentSectionInner">
+                    <center>
+                        <h1>Contact Me</h1>
+                        <div class="EngilshStyleSetting_1">
+                            <p>聯絡資訊：keepbelievef@gmail.com</p>
+                        </div>
+                    </center>
+                </div>    
+                <center><a href="#HeroPage" class="BackToHeroPageBotton">Back</a></center>
+            </section>
+            
+            <section id="Collection" class="ContentSection">
+                <div class="ContentSectionInner">
+                    <center>
+                        <h1>Collection</h1>
+                        <p>。這裡放作品集。</p>
+                        <!--  小遊戲連結1 -->
+                        <p><a href="tetris.html" class="MiniGameLink">(・ω・)っ 小遊戲點我 ٩(｡・ω・｡)و</a></p>
+                        <p><a href="TalkTesting.html" class="MiniGameLink">DEMO:STT語音測試</a></p>
+                        <p><a href="https://bbxr.org/~std50/" class="MiniGameLink">~各位鳥友大大 (◉Θ◉)鳥鳴學習系統(◉Θ◉) 來試試吧~</p>
+                    </center>                    
+                </div>
+                <center><a href="#HeroPage" class="BackToHeroPageBotton">Back</a></center>
+            </section>
+            
+                <section id="Observation" class="ContentSection">
+                    <div class="ContentSectionInner">
+                        <center>
+                            <h1>Observation</h1>
+                            <p>。這裡放目前有趣的新技術。</p>
+                        </center>
+                    </div>
+                <center><a href="#HeroPage" class="BackToHeroPageBotton">Back</a></center>
+            </section>
+            
+            <section id="NightlyNote" class="ContentSection">
+                <div class="ContentSectionInner">
+                    <center>
+                        <h1>Nightly Note</h1>
+                        <p>。這裡放怪東東。</p>
+                    </center>                
+                </div>
+                <center><a href="#HeroPage" class="BackToHeroPageBotton">Back</a></center>
+            </section>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
